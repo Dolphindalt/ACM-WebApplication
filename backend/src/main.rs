@@ -11,16 +11,15 @@ extern crate crypto;
 extern crate jwt;
 extern crate rustc_serialize;
 
-mod password;
-mod user;
-mod usertype;
+mod endpoints;
+mod models;
 mod schema;
 mod db;
 
 fn main() {
     let mut rocket = rocket::ignite().manage(db::connect());
-    rocket = user::mount(rocket);
-    rocket = password::mount(rocket);
-    rocket = usertype::mount(rocket);
+    rocket = endpoints::user::mount(rocket);
+    rocket = endpoints::password::mount(rocket);
+    rocket = endpoints::usertype::mount(rocket);
     rocket.launch();
 }

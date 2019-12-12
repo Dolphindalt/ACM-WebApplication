@@ -1,33 +1,32 @@
-mod password;
-
 use crate::db::Connection;
 use rocket::{self};
 use rocket_contrib::json::{Json, JsonValue};
-use password::Password;
+use crate::models::password::Password;
 use crypto::sha2::Sha256;
 use crate::crypto::digest::Digest;
+use rocket_failure::errors::*;
 
 #[post("/", data = "<password>")]
-fn create(password: Json<Password>, connection: Connection) -> Json<Password> {
+fn create(password: Json<Password>, connection: Connection) -> ApiResult<Json<Password>> {
     let mut insert = Password { password_id: None, ..password.into_inner() };
     insert.password = seed_new_password(insert.password);
-    Json(Password::create(insert, &connection))
+    Ok(Json(Password::create(insert, &connection)))
 }
 
 #[put("/<password_id>", data = "<password>")]
-fn update(password_id: i32, password: Json<Password>, connection: Connection) -> Json<JsonValue> {
+fn update(password_id: i32, password: Json<Password>, connection: Connection) -> ApiResult<Json<JsonValue>> {
     let mut update = Password { password_id: Some(password_id), ..password.into_inner() };
     update.password = seed_new_password(update.password);
-    Json(json!({
+    Ok(Json(json!({
         "success": Password::update(password_id, update, &connection)
-    }))
+    })))
 }
 
 #[delete("/<password_id>")]
-fn delete(password_id: i32, connection: Connection) -> Json<JsonValue> {
-    Json(json!({
+fn delete(password_id: i32, connection: Connection) -> ApiResult<Json<JsonValue>> {
+    Ok(Json(json!({
         "success": Password::delete(password_id, &connection)
-    }))
+    })))
 }
 
 fn seed_new_password(password: String) -> String {

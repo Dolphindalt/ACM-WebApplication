@@ -1,9 +1,7 @@
-mod usertype;
-
 use crate::db::Connection;
 use rocket::{self};
 use rocket_contrib::json::{Json, JsonValue};
-use usertype::Usertype;
+use crate::models::usertype::Usertype;
 use rocket_failure::errors::*;
 
 #[get("/<user_type_id>")]
