@@ -19,9 +19,9 @@ table! {
 
 table! {
     user_types (user_type_id) {
-        user_type_id -> Tinyint,
+        user_type_id -> Nullable<Tinyint>,
         name -> Varchar,
-        description -> Nullable<Varchar>,
+        description -> Varchar,
     }
 }
 

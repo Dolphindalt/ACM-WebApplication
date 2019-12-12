@@ -12,6 +12,12 @@ CREATE TABLE user_types (
   PRIMARY KEY(user_type_id)
 );
 
+INSERT INTO user_types (name, description) VALUES ("Member", "A member of the student ACM chapter.");
+INSERT INTO user_types (name, description) VALUES ("Secretary", "The one who controls information.");
+INSERT INTO user_types (name, description) VALUES ("Treasurer", "The financial magician.");
+INSERT INTO user_types (name, description) VALUES ("Vice President", "Next in line or someone to pass up?");
+INSERT INTO user_types (name, description) VALUES ("President", "The defacto leader of the ACM student chapter.");
+
 CREATE TABLE users(
     user_id int NOT NULL AUTO_INCREMENT,
     password_id int NOT NULL,

@@ -4,6 +4,7 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate rocket_contrib;
+#[macro_use] extern crate rocket_failure;
 extern crate chrono;
 extern crate dotenv;
 extern crate crypto;
@@ -20,5 +21,6 @@ fn main() {
     let mut rocket = rocket::ignite().manage(db::connect());
     rocket = user::mount(rocket);
     rocket = password::mount(rocket);
+    rocket = usertype::mount(rocket);
     rocket.launch();
 }
