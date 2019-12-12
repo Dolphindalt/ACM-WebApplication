@@ -2,8 +2,7 @@ table! {
     passwords (password_id) {
         password_id -> Nullable<Integer>,
         password -> Varchar,
-        password_timeout -> Nullable<Datetime>,
-        verification_code -> Nullable<Varchar>,
+        verification_code -> Varchar,
     }
 }
 
