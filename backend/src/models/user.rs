@@ -33,6 +33,20 @@ impl User {
         }
     }
 
+    pub fn get_user_by_email_and_password(email: &String, raw_password: &String, connection: &MysqlConnection) -> Option<User> {
+        let user = match User::get_user_by_email(&email, &connection) {
+            Some(user) => user,
+            None => return None,
+        };
+        let password_id: i32 = user.password_id.unwrap();
+        let password = crate::models::password::Password::get_by_password_id(password_id, &connection).unwrap();
+        if password.password == crate::models::seed_new_password(raw_password.to_string()) {
+            Some(user)
+        } else {
+            None
+        }
+    }
+
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {
         users::table.order(users::user_id.asc()).load::<User>(connection).unwrap()
     }

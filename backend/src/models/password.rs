@@ -13,7 +13,8 @@ pub struct Password {
 }
 
 impl Password {
-    pub fn create(password: Password, connection: &MysqlConnection) -> Password {
+    pub fn create(mut password: Password, connection: &MysqlConnection) -> Password {
+        password.password = crate::models::seed_new_password(password.password);
         diesel::insert_into(passwords::table)
             .values(&password)
             .execute(connection)

@@ -3,8 +3,6 @@ use rocket::{self};
 use rocket_contrib::json::{Json, JsonValue};
 use crate::models::password::Password;
 use crate::models::user::User;
-use crypto::sha2::Sha256;
-use crate::crypto::digest::Digest;
 use rocket_failure::errors::*;
 use regex::Regex;
 
@@ -35,10 +33,9 @@ fn create_user(new_user_medium: Json<NewUserMedium>, connection: Connection) -> 
     if validate_password(&medium.password) {
         bad_request!(format!("Password length must be at least {}", MIN_PASSWORD_LEN))
     }
-    let hashword = seed_new_password(medium.password);
     let password = Password {
         password_id: None,
-        password: hashword,
+        password: medium.password,
         verification_code: "".to_string(),
     };
     let inserted = Password::create(password, &connection);
@@ -54,23 +51,16 @@ fn create_user(new_user_medium: Json<NewUserMedium>, connection: Connection) -> 
     Ok(Json(inserted))
 }
 
-const WRONG_PASSWORD_STR: &str = "Wrong password";
-const USER_NOT_FOUND_STR: &str = "User with email does not exist";
+const BAD_LOGIN_STR: &str = "Wrong email or password";
 const LOGIN_SUCCESSFUL_STR: &str = "Login successful";
 
 #[post("/login", data = "<login_medium>")]
 fn attempt_login(login_medium: Json<LoginMedium>, connection: Connection) -> ApiResult<Json<JsonValue>> {
     let medium = login_medium.into_inner();
-    let user = match User::get_user_by_email(&medium.email, &connection) {
-        Some(user) => user,
-        None => return Ok(Json(json!({"error":USER_NOT_FOUND_STR}))),
-    };
-    let password_id: i32 = user.password_id.unwrap();
-    let password = Password::get_by_password_id(password_id, &connection).unwrap();
-    if password.password == seed_new_password(medium.password) {
+    if let Some(user) = User::get_user_by_email_and_password(&medium.email, &medium.password, &connection) {
         Ok(Json(json!({"success":LOGIN_SUCCESSFUL_STR})))
     } else {
-        Ok(Json(json!({"error":WRONG_PASSWORD_STR})))
+        Ok(Json(json!({"error":BAD_LOGIN_STR})))
     }
 }
 
@@ -86,12 +76,6 @@ fn validate_email(email: &String, connection: &Connection) -> bool {
 
 fn validate_password(password: &String) -> bool {
     password.len() <= MIN_PASSWORD_LEN
-}
-
-fn seed_new_password(password: String) -> String {
-    let mut seed = Sha256::new();
-    seed.input_str(password.as_str());
-    seed.result_str()
 }
 
 pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {
@@ -114,7 +98,7 @@ mod test {
             .body("{\"email\":\"dalton@mtech.edu\",\"password\":\"mynamejeff\"}")
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::USER_NOT_FOUND_STR).into()));
+        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
     }
 
     #[test]
@@ -126,7 +110,7 @@ mod test {
             .body("{\"email\":\"jbraun@mtech.edu\",\"password\":\"bad_password\"}")
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::WRONG_PASSWORD_STR).into()));
+        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
     }
 
     #[test]
