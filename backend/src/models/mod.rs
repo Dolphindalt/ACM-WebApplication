@@ -1,3 +1,5 @@
+pub mod event_type;
+pub mod event;
 pub mod user;
 pub mod password;
 pub mod usertype;
