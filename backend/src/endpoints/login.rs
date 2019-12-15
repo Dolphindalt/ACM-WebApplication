@@ -5,6 +5,13 @@ use crate::models::password::Password;
 use crate::models::user::User;
 use rocket_failure::errors::*;
 use regex::Regex;
+use jwt::{
+    Header,
+    Registered,
+    Token,
+};
+use crypto::sha2::Sha256;
+use std::env;
 
 const MIN_PASSWORD_LEN: usize = 6;
 
@@ -55,10 +62,20 @@ const BAD_LOGIN_STR: &str = "Wrong email or password";
 const LOGIN_SUCCESSFUL_STR: &str = "Login successful";
 
 #[post("/login", data = "<login_medium>")]
-fn attempt_login(login_medium: Json<LoginMedium>, connection: Connection) -> ApiResult<Json<JsonValue>> {
+fn attempt_login(login_medium: Json<LoginMedium>, connection: Connection) -> Result<Json<JsonValue>, Status> {
     let medium = login_medium.into_inner();
     if let Some(user) = User::get_user_by_email_and_password(&medium.email, &medium.password, &connection) {
-        Ok(Json(json!({"success":LOGIN_SUCCESSFUL_STR})))
+        let header: Header = Default::default();
+        let claims = Registered {
+            sub: Some(serde_json::to_string(&user).ok().unwrap()),
+            ..Default::default()
+        };
+        let token = Token::new(header, claims);
+        let secret_key = env::var("SECRET_KEY").expect("Secret key must be set");
+
+        token.signed(secret_key.as_bytes(), Sha256::new())
+            .map(|message| Json(json!({ "success": LOGIN_SUCCESSFUL_STR, "token": message })))
+            .map_err(|_| Status::InternalServerError)
     } else {
         Ok(Json(json!({"error":BAD_LOGIN_STR})))
     }
@@ -122,7 +139,9 @@ mod test {
             .body("{\"email\":\"jbraun@mtech.edu\",\"password\":\"mynamejeff\"}")
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some(format!("{{\"success\":\"{}\"}}", super::LOGIN_SUCCESSFUL_STR).into()));
+        let expected_msg = format!("\"success\":\"{}\"", super::LOGIN_SUCCESSFUL_STR);
+        let body = response.body_string().unwrap();
+        assert!(body.contains(expected_msg.as_str()));
     }
 
     #[test]
