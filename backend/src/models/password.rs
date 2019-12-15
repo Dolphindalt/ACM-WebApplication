@@ -28,4 +28,13 @@ impl Password {
     pub fn delete(password_id: i32, connection: &MysqlConnection) -> bool {
         diesel::delete(passwords::table.find(password_id)).execute(connection).is_ok()
     }
+
+    pub fn get_by_password_id(password_id: i32, connection: &MysqlConnection) -> Option<Password> {
+        let statement = passwords::table.filter(passwords::password_id.eq(password_id));
+        let password = statement.load::<Password>(connection);
+        match password {
+            Ok(mut password) => password.pop(),
+            Err(_) => None,
+        }
+    }
 }

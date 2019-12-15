@@ -10,16 +10,20 @@ extern crate dotenv;
 extern crate crypto;
 extern crate jwt;
 extern crate rustc_serialize;
+extern crate regex;
 
 mod endpoints;
 mod models;
 mod schema;
 mod db;
+mod auth;
+
+pub fn init_rocket() -> rocket::Rocket {
+    rocket::ignite().manage(db::connect())
+}
 
 fn main() {
-    let mut rocket = rocket::ignite().manage(db::connect());
-    rocket = endpoints::user::mount(rocket);
-    rocket = endpoints::password::mount(rocket);
-    rocket = endpoints::usertype::mount(rocket);
+    let mut rocket = init_rocket();
+    rocket = endpoints::login::mount(rocket);
     rocket.launch();
 }

@@ -29,3 +29,6 @@ CREATE TABLE users(
     FOREIGN KEY(user_type) REFERENCES user_types(user_type_id),
     PRIMARY KEY(user_id)
 );
+
+INSERT INTO passwords (password, verification_code) VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", "");
+INSERT INTO users (password_id, user_type, first_name, last_name, email) VALUES (1, 5, "Jeff", "Braun", "jbraun@mtech.edu");

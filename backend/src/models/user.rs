@@ -5,7 +5,7 @@ use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
 
 #[table_name = "users"]
-#[derive(Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
+#[derive(Debug, Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
 pub struct User {
     pub user_id: Option<i32>,
     pub password_id: Option<i32>,
@@ -22,6 +22,15 @@ impl User {
             .execute(connection)
             .expect("Error creating new user");
         users::table.order(users::user_id.desc()).first(connection).unwrap()
+    }
+
+    pub fn get_user_by_email(email: &String, connection: &MysqlConnection) -> Option<User> {
+        let statement = users::table.filter(users::email.eq(&email));
+        let user = statement.load::<User>(connection);
+        match user {
+            Ok(mut user) => user.pop(),
+            Err(_) => None,
+        }
     }
 
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {
