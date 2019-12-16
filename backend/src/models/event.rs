@@ -8,13 +8,13 @@ use chrono::NaiveDateTime;
 #[table_name = "events"]
 #[derive(Debug, Deserialize, Serialize, Queryable, Insertable, AsChangeset)]
 pub struct Event {
-    event_id: Option<i32>,
-    coordinator_id: Option<i32>,
-    event_type_id: i8,
-    name: String,
-    additional_info: Option<String>,
-    location: String,
-    event_time: NaiveDateTime,
+    pub event_id: Option<i32>,
+    pub coordinator_id: Option<i32>,
+    pub event_type_id: i8,
+    pub name: String,
+    pub additional_info: Option<String>,
+    pub location: String,
+    pub event_time: NaiveDateTime,
 }
 
 impl Event {

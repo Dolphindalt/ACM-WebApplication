@@ -24,6 +24,15 @@ impl User {
         users::table.order(users::user_id.desc()).first(connection).unwrap()
     }
 
+    pub fn get_by_id(id: i32, connection: &MysqlConnection) -> Option<User> {
+        let statement = users::table.filter(users::user_id.eq(id));
+        let user = statement.load::<User>(connection);
+        match user {
+            Ok(mut user) => user.pop(),
+            Err(_) => None,
+        }
+    }
+
     pub fn get_user_by_email(email: &String, connection: &MysqlConnection) -> Option<User> {
         let statement = users::table.filter(users::email.eq(&email));
         let user = statement.load::<User>(connection);
@@ -45,6 +54,10 @@ impl User {
         } else {
             None
         }
+    }
+
+    pub fn validate_user_id(user_id: i32, connection: &MysqlConnection) -> bool {
+        User::get_by_id(user_id, &connection).is_some()
     }
 
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {

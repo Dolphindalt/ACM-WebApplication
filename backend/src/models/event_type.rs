@@ -25,4 +25,8 @@ impl Eventtype {
             Err(_) => None,
         }
     }
+
+    pub fn validate_event_type_id(event_type_id: i8, connection: &MysqlConnection) -> bool {
+        Eventtype::get_by_id(event_type_id, &connection).is_some()
+    }
 }

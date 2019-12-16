@@ -25,5 +25,6 @@ pub fn init_rocket() -> rocket::Rocket {
 fn main() {
     let mut rocket = init_rocket();
     rocket = endpoints::login::mount(rocket);
+    rocket = endpoints::event::mount(rocket);
     rocket.launch();
 }
