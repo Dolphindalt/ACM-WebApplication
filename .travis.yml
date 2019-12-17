@@ -1,0 +1,22 @@
+language: rust
+
+addon:
+  mariadb: '10.0'
+
+go:
+  - 1.10.x
+  - master
+
+os:
+  - linux
+
+dist: trusty
+sudo: false
+
+install: true
+
+script:
+  - cd backend
+  - sudo mysql -uroot -proot < database_init.sql
+  - mysql -uacmuser -presumca acm_manager < migrations/2019-12-11-053044_users/up.sql
+  - cargo test
