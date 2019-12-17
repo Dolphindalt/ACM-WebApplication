@@ -50,3 +50,6 @@ CREATE TABLE events (
     FOREIGN KEY(event_type_id) REFERENCES event_types(event_type_id),
     PRIMARY KEY(event_id)
 );
+
+INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time)
+VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30");

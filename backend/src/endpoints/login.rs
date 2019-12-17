@@ -102,6 +102,9 @@ pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {
 #[cfg(test)]
 mod test {
     use super::rocket;
+    use super::LoginMedium;
+    use super::NewUserMedium;
+    use super::User;
     use crate::init_rocket;
     use rocket::local::Client;
     use rocket::http::Status;
@@ -111,8 +114,13 @@ mod test {
         let mut rocket = init_rocket();
         rocket = rocket.mount("/auth", routes![super::attempt_login]);
         let client = Client::new(rocket).unwrap();
+        let body_credentials: LoginMedium = LoginMedium {
+            email: String::from("dcaron@mtech.edu"),
+            password: String::from("mynamejeff"),
+        };
+        let body_json = serde_json::to_string::<LoginMedium>(&body_credentials).ok().unwrap();
         let mut response = client.post("/auth/login")
-            .body("{\"email\":\"dalton@mtech.edu\",\"password\":\"mynamejeff\"}")
+            .body(body_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
@@ -123,8 +131,13 @@ mod test {
         let mut rocket = init_rocket();
         rocket = rocket.mount("/auth", routes![super::attempt_login]);
         let client = Client::new(rocket).unwrap();
+        let body_credentials: LoginMedium = LoginMedium {
+            email: String::from("jbraun@mtech.edu"),
+            password: String::from("bad_password"),
+        };
+        let body_json = serde_json::to_string::<LoginMedium>(&body_credentials).ok().unwrap();
         let mut response = client.post("/auth/login")
-            .body("{\"email\":\"jbraun@mtech.edu\",\"password\":\"bad_password\"}")
+            .body(body_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
@@ -135,8 +148,12 @@ mod test {
         let mut rocket = init_rocket();
         rocket = rocket.mount("/auth", routes![super::attempt_login]);
         let client = Client::new(rocket).unwrap();
+        let body_credentials: LoginMedium = LoginMedium {
+            email: String::from("jbraun@mtech.edu"),
+            password: String::from("mynamejeff"),
+        };
         let mut response = client.post("/auth/login")
-            .body("{\"email\":\"jbraun@mtech.edu\",\"password\":\"mynamejeff\"}")
+            .body(serde_json::to_string::<LoginMedium>(&body_credentials).ok().unwrap())
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         let expected_msg = format!("\"success\":\"{}\"", super::LOGIN_SUCCESSFUL_STR);
@@ -149,21 +166,21 @@ mod test {
         let mut rocket = init_rocket();
         rocket = rocket.mount("/auth", routes![super::create_user]);
         let client = Client::new(rocket).unwrap();
+        let new_user_body: NewUserMedium  = NewUserMedium {
+            email: String::from("pcurtiss@mtech.edu"),
+            password: String::from("thehandofgod"),
+            first_name: String::from("Phil"),
+            last_name: String::from("Curtiss"),
+        };
+        let body_json = serde_json::to_string::<NewUserMedium>(&new_user_body).ok().unwrap();
         let mut response = client.post("/auth/create")
-            .body("{\"email\":\"pcurtiss@mtech.edu\",\"password\":\"thehandofgod\",\"first_name\":\"Phil\",\"last_name\":\"Curtiss\"}")
+            .body(body_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some("{\"user_id\":2,\"password_id\":2,\"user_type\":1,\"first_name\":\"Phil\",\"last_name\":\"Curtiss\",\"email\":\"pcurtiss@mtech.edu\"}".to_string()));
-    }
-
-    #[test]
-    fn test_create_user_missing_first_name() {
-        let mut rocket = init_rocket();
-        rocket = rocket.mount("/auth", routes![super::create_user]);
-        let client = Client::new(rocket).unwrap();
-        let response = client.post("/auth/create")
-            .body("{\"email\":\"pcurtiss@mtech.edu\",\"password\":\"thehandofgod\",\"last_name\":\"Curtiss\"}")
-            .dispatch();
-        assert_eq!(response.status(), Status::UnprocessableEntity);
+        let body = response.body_string().unwrap();
+        let new_user_response: User = serde_json::from_str::<User>(&body).ok().unwrap();
+        assert_eq!(new_user_body.email, new_user_response.email);
+        assert_eq!(new_user_body.first_name, new_user_response.first_name);
+        assert_eq!(new_user_body.last_name, new_user_response.last_name);
     }
 }

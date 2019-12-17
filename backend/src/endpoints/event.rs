@@ -1,6 +1,6 @@
 use crate::db::Connection;
 use rocket::{self};
-use rocket_contrib::json::{Json, JsonValue};
+use rocket_contrib::json::{Json};
 use crate::models::event_type::Eventtype;
 use crate::models::event::Event;
 use crate::models::user::User;
@@ -46,6 +46,9 @@ pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {
 #[cfg(test)]
 mod test {
     use super::rocket;
+    use super::Event;
+    use chrono::NaiveDateTime;
+    use std::str::FromStr;
     use crate::init_rocket;
     use rocket::local::Client;
     use rocket::http::Status;
@@ -55,14 +58,25 @@ mod test {
         let mut rocket = init_rocket();
         rocket = rocket.mount("/event", routes![super::create]);
         let client = Client::new(rocket).unwrap();
+        let body_event: Event = Event {
+            event_id: None,
+            coordinator_id: Some(1),
+            event_type_id: 1,
+            name: String::from("Test event"),
+            additional_info: Some(String::from("This is a test event")),
+            location: String::from("Dalton\'s house"),
+            event_time: NaiveDateTime::from_str("2007-04-05T14:30:30").ok().unwrap(),
+        };
         let mut response = client.post("/event/create")
-            .body("{\"coordinator_id\":1,\"event_type_id\":1,\"name\":\"Test Event\",
-            \"additional_info\":\"This event is a test.\",\"location\":\"Dalton's House\"
-            \"event_time\":10000000}")
+            .body(serde_json::to_string::<Event>(&body_event).ok().unwrap())
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-        let body = response.body_string().unwrap();
-        assert_eq!(body, "");
+        let event_result: Event = serde_json::from_str::<Event>(response.body_string().unwrap().as_str()).ok().unwrap();
+        assert_eq!(event_result.coordinator_id, body_event.coordinator_id);
+        assert_eq!(event_result.event_type_id, body_event.event_type_id);
+        assert_eq!(event_result.name, body_event.name);
+        assert_eq!(event_result.location, body_event.location);
+        assert_eq!(event_result.event_time, body_event.event_time);
     }
 
 }
