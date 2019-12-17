@@ -1,17 +1,15 @@
 language: rust
 
-addon:
+addons:
   mariadb: '10.0'
 
-go:
-  - 1.10.x
-  - master
+rust:
+  - nightly
 
 os:
   - linux
 
 dist: trusty
-sudo: false
 
 install: true
 
