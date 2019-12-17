@@ -1,5 +1,8 @@
 language: rust
 
+before_install:
+  - sudo apt-get -y install libmysqlclient-dev
+
 addons:
   mariadb: '10.0'
 
