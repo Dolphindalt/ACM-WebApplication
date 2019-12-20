@@ -15,14 +15,18 @@ struct NewEventMedium {
     pub additional_info: String,
     pub location: String,
     pub event_time: NaiveDateTime,
+    pub points: f32,
 }
 
 #[post("/create", data = "<event_medium>")]
 fn create(event_medium: Json<NewEventMedium>, connection: Connection) -> Result<Json<Event>, Status> {
-    let medium = event_medium.into_inner();
-    let val_user: bool = User::validate_user_id(medium.coordinator_id, &connection);
-    let val_event_type: bool = Eventtype::validate_event_type_id(medium.event_type_id, &connection);
+    let mut medium = event_medium.into_inner();
+    let (val_user, _) = User::validate_user_id(medium.coordinator_id, &connection);
+    let (val_event_type, event_type) = Eventtype::validate_event_type_id(medium.event_type_id, &connection);
     if val_user && val_event_type {
+        if medium.points < 0.0 {
+            medium.points = event_type.unwrap().default_points;
+        }
         let event = Event {
             event_id: None,
             coordinator_id: Some(medium.coordinator_id),
@@ -31,6 +35,7 @@ fn create(event_medium: Json<NewEventMedium>, connection: Connection) -> Result<
             additional_info: Some(medium.additional_info),
             location: medium.location,
             event_time: medium.event_time,
+            points: medium.points,
         };
         let event = Event::create(event, &connection);
         Ok(Json(event))
@@ -66,6 +71,7 @@ mod test {
             additional_info: Some(String::from("This is a test event")),
             location: String::from("Dalton\'s house"),
             event_time: NaiveDateTime::from_str("2007-04-05T14:30:30").ok().unwrap(),
+            points: 0.0,
         };
         let mut response = client.post("/event/create")
             .body(serde_json::to_string::<Event>(&body_event).ok().unwrap())

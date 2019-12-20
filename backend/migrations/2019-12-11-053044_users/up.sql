@@ -25,62 +25,78 @@ CREATE TABLE users(
     first_name varchar(20) NOT NULL,
     last_name varchar(20) NOT NULL,
     email varchar(30) NOT NULL UNIQUE,
+    points float NOT NULL,
     FOREIGN KEY(password_id) REFERENCES passwords(password_id),
     FOREIGN KEY(user_type) REFERENCES user_types(user_type_id),
     PRIMARY KEY(user_id)
 );
 
-INSERT INTO passwords (password, verification_code) VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", "");
-INSERT INTO users (password_id, user_type, first_name, last_name, email) VALUES (1, 5, "Jeff", "Braun", "jbraun@mtech.edu");
+INSERT INTO passwords (password, verification_code)
+VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", "");
+INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
+VALUES (1, 5, "Jeff", "Braun", "jbraun@mtech.edu", 0.0);
+
+CREATE TABLE files(
+  file_id int NOT NULL AUTO_INCREMENT,
+  uploader int NOT NULL,
+  audience tinyint NOT NULL,
+  file_name varchar(30) NOT NULL UNIQUE,
+  description varchar(140) NOT NULL,
+  FOREIGN KEY(uploader) REFERENCES users(user_id),
+  FOREIGN KEY(audience) REFERENCES user_types(user_type_id),
+  PRIMARY KEY(file_id)
+);
 
 CREATE TABLE event_types (
     event_type_id tinyint NOT NULL AUTO_INCREMENT,
-    name varchar(40),
-    description varchar(140),
+    name varchar(40) NOT NULL,
+    description varchar(140) NOT NULL,
+    default_points float NOT NULL,
     PRIMARY KEY(event_type_id)
 );
 
-INSERT INTO event_types (name, description)
-VALUES ('Meeting', 'General club meetings for all members');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Meeting', 'General club meetings for all members', 125.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('LAN Party', 'LAN Party, games, and pizza');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('LAN Party', 'LAN Party, games, and pizza', 50.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Programming Comp', 'Programming competitions');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Programming Comp', 'Programming competitions', 150.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Programming Prac', 'Practice for competitions');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Programming Prac', 'Practice for competitions', 75.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Industry Trip', 'Going out and seeing companies');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Industry Trip', 'Going out and seeing companies', 200.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Homecoming', 'Attendance for Homecoming events');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Homecoming', 'Attendance for Homecoming events', 100.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Club Rush', 'Club Rush help');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Club Rush', 'Club Rush help', 100.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('ASMT Meeting', 'Attendance for an ASMT proposal meeting');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('ASMT Meeting', 'Attendance for an ASMT proposal meeting', 75.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('DnD Night', 'Dungeons and Dragons game night');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('DnD Night', 'Dungeons and Dragons game night', 50.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Board Meeting', 'Board Meeting for Officers');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Board Meeting', 'Board Meeting for Officers', 75.0);
 
-INSERT INTO event_types (name, description)
-VALUES ('Study Group', 'Time for students to help each other with homework');
+INSERT INTO event_types (name, description, default_points)
+VALUES ('Study Group', 'Time for students to help each other with homework', 100.0);
 
 CREATE TABLE events (
     event_id int NOT NULL AUTO_INCREMENT,
     coordinator_id int,
     event_type_id tinyint NOT NULL,
     name varchar(30) NOT NULL,
-    additional_info text,
+    additional_info varchar(140),
     location varchar(50) NOT NULL,
     event_time timestamp NOT NULL,
+    points float NOT NULL,
     FOREIGN KEY(coordinator_id) REFERENCES users(user_id),
     FOREIGN KEY(event_type_id) REFERENCES event_types(event_type_id),
     PRIMARY KEY(event_id)
@@ -88,3 +104,51 @@ CREATE TABLE events (
 
 INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time)
 VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30");
+
+CREATE TABLE event_files(
+  file_id int NOT NULL,
+  event_id int NOT NULL,
+  additional_info varchar(140),
+  FOREIGN KEY(event_id) REFERENCES events(event_id),
+  PRIMARY KEY(file_id)
+);
+
+CREATE TABLE user_attendences(
+  user_attendence_id int NOT NULL AUTO_INCREMENT,
+  user_id int NOT NULL,
+  event_id int NOT NULL,
+  given_points float NOT NULL,
+  additional_info varchar(140),
+  FOREIGN KEY(user_id) REFERENCES users(user_id),
+  FOREIGN KEY(event_id) REFERENCES events(event_id),
+  PRIMARY KEY(user_attendence_id)
+);
+
+CREATE TABLE fee_types(
+  fee_type_id tinyint NOT NULL AUTO_INCREMENT,
+  name varchar(30) NOT NULL,
+  description varchar(140) NOT NULL,
+  PRIMARY KEY(fee_type_id)
+);
+
+CREATE TABLE fees(
+  fee_id int NOT NULL AUTO_INCREMENT,
+  fee_type_id tinyint NOT NULL,
+  name varchar(30) NOT NULL,
+  description varchar(140) NOT NULL,
+  due_date timestamp NOT NULL,
+  fee float NOT NULL,
+  FOREIGN KEY(fee_type_id) REFERENCES fee_types(fee_type_id),
+  PRIMARY KEY(fee_id)
+);
+
+CREATE TABLE debtor_fees(
+  debtor_fee_id int NOT NULL AUTO_INCREMENT,
+  debtor_id int NOT NULL,
+  fee_id int NOT NULL,
+  additional_info varchar(140),
+  paid boolean NOT NULL,
+  FOREIGN KEY(debtor_id) REFERENCES users(user_id),
+  FOREIGN KEY(fee_id) REFERENCES fees(fee_id),
+  PRIMARY KEY(debtor_fee_id)
+);

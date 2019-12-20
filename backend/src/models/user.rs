@@ -13,6 +13,7 @@ pub struct User {
     pub first_name: String,
     pub last_name: String,
     pub email: String,
+    pub points: f32,
 }
 
 impl User {
@@ -56,8 +57,9 @@ impl User {
         }
     }
 
-    pub fn validate_user_id(user_id: i32, connection: &MysqlConnection) -> bool {
-        User::get_by_id(user_id, &connection).is_some()
+    pub fn validate_user_id(user_id: i32, connection: &MysqlConnection) -> (bool, Option<User>) {
+        let result = User::get_by_id(user_id, &connection);
+        (result.is_some(), result)
     }
 
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {

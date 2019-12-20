@@ -7,9 +7,10 @@ use crate::diesel::ExpressionMethods;
 #[table_name = "event_types"]
 #[derive(Debug, Deserialize, Serialize, Queryable, Insertable, AsChangeset)]
 pub struct Eventtype {
-    event_type_id: i8,
-    name: String,
-    description: String,
+    pub event_type_id: i8,
+    pub name: String,
+    pub description: String,
+    pub default_points: f32,
 }
 
 impl Eventtype {
@@ -26,7 +27,8 @@ impl Eventtype {
         }
     }
 
-    pub fn validate_event_type_id(event_type_id: i8, connection: &MysqlConnection) -> bool {
-        Eventtype::get_by_id(event_type_id, &connection).is_some()
+    pub fn validate_event_type_id(event_type_id: i8, connection: &MysqlConnection) -> (bool, Option<Eventtype>) {
+        let result = Eventtype::get_by_id(event_type_id, &connection);
+        (result.is_some(), result)
     }
 }

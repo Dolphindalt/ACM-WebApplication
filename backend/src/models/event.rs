@@ -15,6 +15,7 @@ pub struct Event {
     pub additional_info: Option<String>,
     pub location: String,
     pub event_time: NaiveDateTime,
+    pub points: f32,
 }
 
 impl Event {

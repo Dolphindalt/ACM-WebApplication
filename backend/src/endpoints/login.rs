@@ -53,6 +53,7 @@ fn create_user(new_user_medium: Json<NewUserMedium>, connection: Connection) -> 
         first_name: medium.first_name,
         last_name: medium.last_name,
         email: medium.email,
+        points: 0.0,
     };
     let inserted = User::create(user, &connection);
     Ok(Json(inserted))
