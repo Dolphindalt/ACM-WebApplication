@@ -1,6 +1,7 @@
 use crate::db::Connection;
 use rocket::{self};
 use rocket_contrib::json::{Json, JsonValue};
+use rocket::http::Status;
 use crate::models::password::Password;
 use crate::models::user::User;
 use rocket_failure::errors::*;
@@ -13,7 +14,7 @@ use jwt::{
 use crypto::sha2::Sha256;
 use std::env;
 
-const MIN_PASSWORD_LEN: usize = 6;
+const MIN_PASSWORD_LEN: usize = 10;
 
 #[derive(Serialize, Deserialize)]
 struct NewUserMedium {
@@ -59,7 +60,6 @@ fn create_user(new_user_medium: Json<NewUserMedium>, connection: Connection) -> 
     Ok(Json(inserted))
 }
 
-const BAD_LOGIN_STR: &str = "Wrong email or password";
 const LOGIN_SUCCESSFUL_STR: &str = "Login successful";
 
 #[post("/login", data = "<login_medium>")]
@@ -78,7 +78,7 @@ fn attempt_login(login_medium: Json<LoginMedium>, connection: Connection) -> Res
             .map(|message| Json(json!({ "success": LOGIN_SUCCESSFUL_STR, "token": message })))
             .map_err(|_| Status::InternalServerError)
     } else {
-        Ok(Json(json!({"error":BAD_LOGIN_STR})))
+        Err(Status::BadRequest)
     }
 }
 
@@ -120,11 +120,10 @@ mod test {
             password: String::from("mynamejeff"),
         };
         let body_json = serde_json::to_string::<LoginMedium>(&body_credentials).ok().unwrap();
-        let mut response = client.post("/auth/login")
+        let response = client.post("/auth/login")
             .body(body_json)
             .dispatch();
-        assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
+        assert_eq!(response.status(), Status::BadRequest);
     }
 
     #[test]
@@ -137,11 +136,10 @@ mod test {
             password: String::from("bad_password"),
         };
         let body_json = serde_json::to_string::<LoginMedium>(&body_credentials).ok().unwrap();
-        let mut response = client.post("/auth/login")
+        let response = client.post("/auth/login")
             .body(body_json)
             .dispatch();
-        assert_eq!(response.status(), Status::Ok);
-        assert_eq!(response.body_string(), Some(format!("{{\"error\":\"{}\"}}", super::BAD_LOGIN_STR).into()));
+        assert_eq!(response.status(), Status::BadRequest);
     }
 
     #[test]
