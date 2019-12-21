@@ -1,0 +1,17 @@
+<div class="col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+            <div class="card-header">
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="card-body">
+                <span for="email">Email</span><input type="email" formControlName="email"/>
+                <span for="password">Password</span><input type="password" formControlName="password"/>
+            </div>
+            <div class="card-footer">
+                <button type="button" type="submit" class="button blue">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

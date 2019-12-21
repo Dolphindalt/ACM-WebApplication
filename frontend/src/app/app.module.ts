@@ -4,14 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LoginPopUpComponent } from './login-pop-up/login-pop-up.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { HomeComponent } from './home/home.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TempAlertComponent } from './temp-alert/temp-alert.component';
+import { LoginComponent } from './login/login.component';
+import { ToastsContainer } from './toast/toasts-container.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -20,10 +20,10 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginPopUpComponent,
     MainNavComponent,
     HomeComponent,
-    TempAlertComponent
+    LoginComponent,
+    ToastsContainer
   ],
   imports: [
     BrowserModule,

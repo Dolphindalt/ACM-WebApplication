@@ -4,10 +4,10 @@
         <div class="main-menu">
             <ul class="main-menu-frame">
                 <a routerLink=""><li class="button acm_blue">Home</li></a>
-                <a><li class="button acm_blue">Profile</li></a>
+                <a routerLink="login"><li class="button acm_blue">Profile</li></a>
             </ul>
             <ul class="main-menu-frame">
-                <a><li class="button acm_blue"><app-login-pop-up></app-login-pop-up></li></a>
+                <a routerLink="login"><li class="button acm_blue">Login</li></a>
             </ul>
         </div>
     </div>
@@ -15,6 +15,6 @@
 </nav>
 <div *ngIf="openedSubMenu" class="bars-menu-content">
         <a routerLink="" class="button shallow_blue">Home</a>
-        <a class="button shallow_blue">Profile</a>
-        <a class="button shallow_blue"><app-login-pop-up></app-login-pop-up></a>
+        <a crouterLink="login" lass="button shallow_blue">Profile</a>
+        <a crouterLink="login" lass="button shallow_blue">Login</a>
 </div>
