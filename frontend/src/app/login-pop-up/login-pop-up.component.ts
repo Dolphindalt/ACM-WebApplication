@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { TempAlertComponent } from "../temp-alert/temp-alert.component";
- 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-login-pop-up',
   templateUrl: './login-pop-up.component.html',
@@ -14,13 +15,13 @@ export class LoginPopUpComponent implements OnInit {
   private temp_alert: TempAlertComponent;
   private login_alert_type: string;
 
-  visible: boolean = false;
   loginForm: FormGroup;
   staticAlertClosed: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private modalService: NgbModal
     ) {
     this.loginForm = this.formBuilder.group({
       email: '',
@@ -32,8 +33,8 @@ export class LoginPopUpComponent implements OnInit {
     
   }
 
-  toggleLogin() {
-    this.visible = !this.visible;
+  openLogin(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'login-modal'});
   }
 
   onSubmit(loginData) {
@@ -45,9 +46,9 @@ export class LoginPopUpComponent implements OnInit {
     })
     .subscribe((val) => {
       localStorage.setItem("access_token", val["token"]);
-      obj.visible = false;
       obj.login_alert_type = "success";
-      obj.temp_alert.changeMessage("Login successful.")
+      obj.temp_alert.changeMessage("Login successful.");
+      this.modalService.dismissAll();
     },
     response => {
       obj.login_alert_type = "danger";

@@ -1,16 +1,19 @@
-<div (click)="toggleLogin()">Login</div>
-<div *ngIf="visible" class="login-pop-up-root">
-    <div class="login-pop-up-frame">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-            <span for="email">Email</span><input type="email" formControlName="email"/><br>
-            <span for="password">Password</span><input type="password" formControlName="password"/><br>
-            <br>
-            <div class="center">
-                <button class="button blue" type="submit">Login</button>
-            </div>
-        </form>
-        <br>
-        <p class="center"><a href="">Don't have an account?</a></p>
-    </div>
-</div>
+<ng-template #content let-modal>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+        <div class="modal-header">
+            <h4 class="modal-title" id="login-modal">Login</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <span for="email">Email</span><input type="email" formControlName="email"/>
+            <span for="password">Password</span><input type="password" formControlName="password"/>
+        </div>
+        <div class="modal-footer">
+            <button type="button" type="submit" class="button blue">Login</button>
+        </div>
+    </form>
+</ng-template>
+<div (click)="openLogin(content)">Login</div>
 <app-temp-alert alert_type="{{login_alert_type}}"></app-temp-alert>
