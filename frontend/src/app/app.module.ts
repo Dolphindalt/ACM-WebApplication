@@ -10,6 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TempAlertComponent } from './temp-alert/temp-alert.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -20,7 +22,8 @@ export function tokenGetter() {
     AppComponent,
     LoginPopUpComponent,
     MainNavComponent,
-    HomeComponent
+    HomeComponent,
+    TempAlertComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ export function tokenGetter() {
       }
     }),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
