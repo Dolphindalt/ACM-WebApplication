@@ -10,6 +10,7 @@ pub struct Usertype {
     pub user_type_id: Option<i8>,
     pub name: String,
     pub description: String,
+    pub is_admin: bool,
 }
 
 impl Usertype {

@@ -102,6 +102,7 @@ table! {
         user_type_id -> Nullable<Tinyint>,
         name -> Varchar,
         description -> Varchar,
+        is_admin -> Bool,
     }
 }
 

@@ -9,14 +9,23 @@ CREATE TABLE user_types (
   user_type_id tinyint NOT NULL AUTO_INCREMENT,
   name varchar(20) NOT NULL,
   description varchar(50),
+  is_admin boolean NOT NULL,
   PRIMARY KEY(user_type_id)
 );
 
-INSERT INTO user_types (name, description) VALUES ("Member", "A member of the student ACM chapter.");
-INSERT INTO user_types (name, description) VALUES ("Secretary", "The one who controls information.");
-INSERT INTO user_types (name, description) VALUES ("Treasurer", "The financial magician.");
-INSERT INTO user_types (name, description) VALUES ("Vice President", "Next in line or someone to pass up?");
-INSERT INTO user_types (name, description) VALUES ("President", "The defacto leader of the ACM student chapter.");
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("Member", "A member of the student ACM chapter.", false);
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("Secretary", "The one who controls information.", true);
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("Treasurer", "The financial magician.", true);
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("Vice President", "Next in line or someone to pass up?", true);
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("President", "The defacto leader of the ACM student chapter.", true);
+INSERT INTO user_types (name, description, is_admin)
+VALUES ("Mascot", "In honor of Josh Baldwin and the legacy of his predecessors.", false);
+
 
 CREATE TABLE users(
     user_id int NOT NULL AUTO_INCREMENT,

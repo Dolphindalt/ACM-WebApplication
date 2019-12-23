@@ -6,6 +6,8 @@ use crate::models::event_type::Eventtype;
 use crate::models::event::Event;
 use crate::models::user::User;
 use chrono::NaiveDateTime;
+use crate::auth::APIKey;
+use rocket::response::status::{Custom};
 
 #[derive(Serialize, Deserialize)]
 struct NewEventMedium {
@@ -19,7 +21,14 @@ struct NewEventMedium {
 }
 
 #[post("/create", data = "<event_medium>")]
-fn create(event_medium: Json<NewEventMedium>, connection: Connection) -> Result<Json<Event>, Status> {
+fn create(event_medium: Json<NewEventMedium>, key: APIKey, connection: Connection) -> Result<Json<Event>, Custom<String>> {
+    let request_user: User = match crate::auth::get_user_from_token_string(key.0) {
+        Some(ru) => ru,
+        None => return Err(Custom(Status::Unauthorized, String::from("You do not have access to this resource.")))
+    };
+    if !User::is_admin(request_user.user_type, &connection) {
+        return Err(Custom(Status::Unauthorized, String::from("You do not have access to this resource.")));
+    }
     let mut medium = event_medium.into_inner();
     let (val_user, _) = User::validate_user_id(medium.coordinator_id, &connection);
     let (val_event_type, event_type) = Eventtype::validate_event_type_id(medium.event_type_id, &connection);
@@ -40,7 +49,7 @@ fn create(event_medium: Json<NewEventMedium>, connection: Connection) -> Result<
         let event = Event::create(event, &connection);
         Ok(Json(event))
     } else {
-        Err(Status::BadRequest)
+        Err(Custom(Status::BadRequest, String::from("Invalid user or event type")))
     }
 }
 
@@ -57,6 +66,8 @@ mod test {
     use crate::init_rocket;
     use rocket::local::Client;
     use rocket::http::Status;
+    use crate::endpoints::test::admin_authorization_header;
+    use crate::endpoints::test::default_authorization_header;
 
     #[test]
     fn create_event_test_good() {
@@ -73,7 +84,9 @@ mod test {
             event_time: NaiveDateTime::from_str("2007-04-05T14:30:30").ok().unwrap(),
             points: 0.0,
         };
-        let mut response = client.post("/event/create")
+        let mut request = client.post("/event/create");
+        request.add_header(admin_authorization_header());
+        let mut response = request
             .body(serde_json::to_string::<Event>(&body_event).ok().unwrap())
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
@@ -83,6 +96,29 @@ mod test {
         assert_eq!(event_result.name, body_event.name);
         assert_eq!(event_result.location, body_event.location);
         assert_eq!(event_result.event_time, body_event.event_time);
+    }
+
+    #[test]
+    fn create_event_test_bad_authentication() {
+        let mut rocket = init_rocket();
+        rocket = rocket.mount("/event", routes![super::create]);
+        let client = Client::new(rocket).unwrap();
+        let body_event: Event = Event {
+            event_id: None,
+            coordinator_id: Some(1),
+            event_type_id: 1,
+            name: String::from("Test event"),
+            additional_info: Some(String::from("This is a test event")),
+            location: String::from("Dalton\'s house"),
+            event_time: NaiveDateTime::from_str("2007-04-05T14:30:30").ok().unwrap(),
+            points: 0.0,
+        };
+        let mut request = client.post("/event/create");
+        request.add_header(default_authorization_header());
+        let response = request
+            .body(serde_json::to_string::<Event>(&body_event).ok().unwrap())
+            .dispatch();
+        assert_eq!(response.status(), Status::Unauthorized);
     }
 
 }

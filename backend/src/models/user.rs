@@ -3,6 +3,7 @@ use diesel::mysql::MysqlConnection;
 use diesel::prelude::*;
 use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
+use crate::models::usertype::Usertype;
 
 #[table_name = "users"]
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
@@ -60,6 +61,13 @@ impl User {
     pub fn validate_user_id(user_id: i32, connection: &MysqlConnection) -> (bool, Option<User>) {
         let result = User::get_by_id(user_id, &connection);
         (result.is_some(), result)
+    }
+
+    pub fn is_admin(user_type_id: i8, connection: &MysqlConnection) -> bool { 
+        if let Some(user_type) = Usertype::read(user_type_id, &connection) {
+            return user_type.is_admin;
+        };
+        false
     }
 
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {
