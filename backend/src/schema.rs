@@ -71,7 +71,7 @@ table! {
     passwords (password_id) {
         password_id -> Nullable<Integer>,
         password -> Varchar,
-        verification_code -> Varchar,
+        verification_code -> Nullable<Varchar>,
     }
 }
 

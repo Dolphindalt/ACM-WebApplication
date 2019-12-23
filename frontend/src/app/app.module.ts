@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './login/login.component';
 import { ToastsContainer } from './toast/toasts-container.component';
+import { RegisterComponent } from './register/register.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -23,7 +24,8 @@ export function tokenGetter() {
     MainNavComponent,
     HomeComponent,
     LoginComponent,
-    ToastsContainer
+    ToastsContainer,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

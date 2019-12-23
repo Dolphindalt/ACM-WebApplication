@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { AuthenticationService } from '../authentication.service';
 import { first } from 'rxjs/operators';
 import { ToastService } from '../toast.service';
+import { Router } from "@angular/router"
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private authService: AuthenticationService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private router: Router
   ) { 
     this.loginForm = this.formBuilder.group({
       email: '',
@@ -31,8 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(loginData) {
-    
-    if(this.loginForm.invalid) {
+    if (this.loginForm.invalid) {
       return;
     }
 
@@ -42,13 +43,12 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          
+          this.router.navigate(['/']);
         },
         error => {
-          ts.show("Invalid username or password.", { classname: "bg-danger text-light" });
+          ts.show(error.error, { classname: "bg-danger text-light" });
         }
       );
-    this.loginForm.reset();
   }
 
 }

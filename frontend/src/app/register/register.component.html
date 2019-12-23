@@ -1,15 +1,17 @@
 <div class="col-md-6 offset-md-3 mt-5">
     <div class="card">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
             <div class="card-header">
-                <h4 class="card-title">Login</h4>
+                <h4 class="card-title">Register</h4>
             </div>
             <div class="card-body">
                 <span for="email">Email</span><input type="email" formControlName="email"/>
+                <span for="firstName">First Name</span><input type="text" formControlName="firstName"/>
+                <span for="lastName">Last Name</span><input type="text" formControlName="lastName"/>
                 <span for="password">Password</span><input type="password" formControlName="password"/>
             </div>
             <div class="card-footer">
-                <button type="button" type="submit" class="button blue">Login</button>
+                <button type="button" type="submit" class="button green">Register</button>
             </div>
         </form>
     </div>

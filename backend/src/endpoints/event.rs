@@ -1,10 +1,10 @@
 use crate::db::Connection;
 use rocket::{self};
 use rocket_contrib::json::{Json};
+use rocket::http::Status;
 use crate::models::event_type::Eventtype;
 use crate::models::event::Event;
 use crate::models::user::User;
-use rocket_failure::errors::*;
 use chrono::NaiveDateTime;
 
 #[derive(Serialize, Deserialize)]

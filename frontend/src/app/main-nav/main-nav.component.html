@@ -7,7 +7,9 @@
                 <a routerLink="login"><li class="button acm_blue">Profile</li></a>
             </ul>
             <ul class="main-menu-frame">
-                <a routerLink="login"><li class="button acm_blue">Login</li></a>
+                <a *ngIf="!authenticated" routerLink="login"><li class="button acm_blue">Login</li></a>
+                <a *ngIf="!authenticated" routerLink="register"><li class="button acm_blue">Register</li></a>
+                <a *ngIf="authenticated"><li class="button acm_blue" (click)="attemptLogout()">Logout</li></a>
             </ul>
         </div>
     </div>
@@ -15,6 +17,8 @@
 </nav>
 <div *ngIf="openedSubMenu" class="bars-menu-content">
         <a routerLink="" class="button shallow_blue">Home</a>
-        <a crouterLink="login" lass="button shallow_blue">Profile</a>
-        <a crouterLink="login" lass="button shallow_blue">Login</a>
+        <a routerLink="login" class="button shallow_blue">Profile</a>
+        <a *ngIf="!authenticated" routerLink="login" class="button shallow_blue">Login</a>
+        <a *ngIf="!authenticated" routerLink="register" class="button shallow_blue">Register</a>
+        <a *ngIf="authenticated" class="button acm_blue" (click)="attemptLogout()">Logout</a>
 </div>

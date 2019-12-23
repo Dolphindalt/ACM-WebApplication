@@ -32,9 +32,13 @@ CREATE TABLE users(
 );
 
 INSERT INTO passwords (password, verification_code)
-VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", "");
+VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", null);
+INSERT INTO passwords (password, verification_code)
+VALUES ("3b2d6c9d79b3996ea7ab4b4ec13edb9060856d67ec4e0575d45823aee7610288", "varcode");
 INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
 VALUES (1, 5, "Jeff", "Braun", "jbraun@mtech.edu", 0.0);
+INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
+VALUES (2, 1, "Frank", "Ackerman", "fackerman@mtech.edu", 0.0);
 
 CREATE TABLE files(
   file_id int NOT NULL AUTO_INCREMENT,

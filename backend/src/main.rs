@@ -4,7 +4,6 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate rocket_contrib;
-#[macro_use] extern crate rocket_failure;
 extern crate rocket_cors;
 extern crate chrono;
 extern crate dotenv;
@@ -12,12 +11,14 @@ extern crate crypto;
 extern crate jwt;
 extern crate rustc_serialize;
 extern crate regex;
+extern crate rand;
 
 mod endpoints;
 mod models;
 mod schema;
 mod db;
 mod auth;
+mod email;
 
 use rocket_cors::{AllowedHeaders, AllowedOrigins, Error, Cors};
 use rocket::http::Method;

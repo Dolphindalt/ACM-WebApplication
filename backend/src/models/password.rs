@@ -5,11 +5,11 @@ use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
 
 #[table_name = "passwords"]
-#[derive(Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
+#[derive(Clone, Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
 pub struct Password {
     pub password_id: Option<i32>,
     pub password: String,
-    pub verification_code: String,
+    pub verification_code: Option<String>,
 }
 
 impl Password {
