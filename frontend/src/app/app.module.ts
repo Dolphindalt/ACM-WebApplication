@@ -7,12 +7,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { HomeComponent } from './home/home.component';
 import { JwtModule } from "@auth0/angular-jwt";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './login/login.component';
 import { ToastsContainer } from './toast/toasts-container.component';
 import { RegisterComponent } from './register/register.component';
+import { environment } from 'src/environments/environment';
+import { BaseurlService } from './baseurl.service';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -42,7 +44,10 @@ export function tokenGetter() {
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: BaseurlService, multi: true },
+    { provide: "BASE_API_URL", useValue: environment.apiUrl }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

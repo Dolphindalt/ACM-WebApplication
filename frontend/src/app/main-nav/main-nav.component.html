@@ -20,5 +20,5 @@
         <a routerLink="login" class="button shallow_blue">Profile</a>
         <a *ngIf="!authenticated" routerLink="login" class="button shallow_blue">Login</a>
         <a *ngIf="!authenticated" routerLink="register" class="button shallow_blue">Register</a>
-        <a *ngIf="authenticated" class="button acm_blue" (click)="attemptLogout()">Logout</a>
+        <a *ngIf="authenticated" class="button shallow_blue" (click)="attemptLogout()">Logout</a>
 </div>

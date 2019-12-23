@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
 
     let ts = this.toastService;
 
-    this.http.post("http://localhost:8000/auth/register",
+    this.http.post("auth/register",
       {
         "email": registerData.email,
         "password": registerData.password,

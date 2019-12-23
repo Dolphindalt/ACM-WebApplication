@@ -1,6 +1,6 @@
 use crate::db::Connection;
 use rocket::{self};
-use rocket_contrib::json::{Json};
+use rocket_contrib::json::{Json, JsonValue};
 use rocket::http::Status;
 use crate::models::event_type::Eventtype;
 use crate::models::event::Event;
@@ -53,8 +53,14 @@ fn create(event_medium: Json<NewEventMedium>, key: APIKey, connection: Connectio
     }
 }
 
+#[get("/")]
+pub fn get_all(connection: Connection) -> Result<Json<JsonValue>, Custom<String>> {
+    let events: Vec<Event> = Event::read_all(&connection);
+    Ok(Json(json!{events}))
+}
+
 pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {
-    rocket.mount("/event", routes![create])
+    rocket.mount("/event", routes![create, get_all])
 }
 
 #[cfg(test)]
@@ -119,6 +125,15 @@ mod test {
             .body(serde_json::to_string::<Event>(&body_event).ok().unwrap())
             .dispatch();
         assert_eq!(response.status(), Status::Unauthorized);
+    }
+
+    #[test]
+    fn get_all_events_test_good() {
+        let mut rocket = init_rocket();
+        rocket = rocket.mount("/event", routes![super::get_all]);
+        let client = Client::new(rocket).unwrap();
+        let request = client.get("/event").dispatch();
+        assert_eq!(request.status(), Status::Ok);
     }
 
 }

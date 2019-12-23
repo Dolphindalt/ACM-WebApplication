@@ -36,7 +36,7 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string) {
-    return this.http.post("http://localhost:8000/auth/login",
+    return this.http.post("auth/login",
     {
       "email": email,
       "password": password
