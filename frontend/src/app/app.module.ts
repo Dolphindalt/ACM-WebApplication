@@ -15,6 +15,9 @@ import { ToastsContainer } from './toast/toasts-container.component';
 import { RegisterComponent } from './register/register.component';
 import { environment } from 'src/environments/environment';
 import { BaseurlService } from './baseurl.service';
+import { EventComponent } from './event/event.component';
+import { EventBoardComponent } from './event-board/event-board.component';
+import { OfficerBoardComponent } from './officer-board/officer-board.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -27,7 +30,10 @@ export function tokenGetter() {
     HomeComponent,
     LoginComponent,
     ToastsContainer,
-    RegisterComponent
+    RegisterComponent,
+    EventComponent,
+    EventBoardComponent,
+    OfficerBoardComponent
   ],
   imports: [
     BrowserModule,

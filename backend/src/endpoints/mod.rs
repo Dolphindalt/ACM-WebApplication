@@ -1,5 +1,6 @@
 pub mod event;
 pub mod login;
+pub mod officers;
 
 #[cfg(test)]
 mod test {

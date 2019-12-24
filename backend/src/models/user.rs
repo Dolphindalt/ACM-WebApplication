@@ -70,6 +70,12 @@ impl User {
         false
     }
 
+    pub fn get_officers(connection: &MysqlConnection) -> Vec<User> {
+        users::table
+            .filter(users::user_type.eq_any(vec![2, 3, 4, 5]))
+            .load(connection).unwrap()
+    }
+
     pub fn read_all(connection: &MysqlConnection) -> Vec<User> {
         users::table.order(users::user_id.asc()).load::<User>(connection).unwrap()
     }

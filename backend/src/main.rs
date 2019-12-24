@@ -43,6 +43,7 @@ fn main() {
     let mut rocket = init_rocket();
     rocket = endpoints::login::mount(rocket);
     rocket = endpoints::event::mount(rocket);
+    rocket = endpoints::officers::mount(rocket);
     rocket.attach(cors)
         .launch();
 }

@@ -4,7 +4,8 @@
         <div class="main-menu">
             <ul class="main-menu-frame">
                 <a routerLink=""><li class="button acm_blue">Home</li></a>
-                <a routerLink="login"><li class="button acm_blue">Profile</li></a>
+                <a routerLink="events"><li class="button acm_blue">Events</li></a>
+                <a routerLink="officers"><li class="button acm_blue">Officers</li></a>
             </ul>
             <ul class="main-menu-frame">
                 <a *ngIf="!authenticated" routerLink="login"><li class="button acm_blue">Login</li></a>
@@ -17,7 +18,8 @@
 </nav>
 <div *ngIf="openedSubMenu" class="bars-menu-content">
         <a routerLink="" class="button shallow_blue">Home</a>
-        <a routerLink="login" class="button shallow_blue">Profile</a>
+        <a routerLink="events" class="button shallow_blue">Events</a>
+        <a routerLink="officers" class="button shallow_blue">Officers</a>
         <a *ngIf="!authenticated" routerLink="login" class="button shallow_blue">Login</a>
         <a *ngIf="!authenticated" routerLink="register" class="button shallow_blue">Register</a>
         <a *ngIf="authenticated" class="button shallow_blue" (click)="attemptLogout()">Logout</a>

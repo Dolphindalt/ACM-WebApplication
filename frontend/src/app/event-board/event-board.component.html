@@ -1,0 +1,10 @@
+<div class="mt-5">
+    <ul *ngIf="events">
+        <li *ngFor="let e of events">
+            <app-event [event]="e"></app-event>
+        </li>
+    </ul>
+    <div *ngIf="!events" class="jumbotron">
+        <h3>There are currently no events.</h3>
+    </div>
+</div>
