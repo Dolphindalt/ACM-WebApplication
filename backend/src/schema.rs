@@ -23,7 +23,8 @@ table! {
 
 table! {
     event_files (file_id) {
-        file_id -> Nullable<Integer>,
+        dummy_id -> Nullable<Integer>,
+        file_id -> Integer,
         event_id -> Integer,
         additional_info -> Nullable<Varchar>,
     }
@@ -59,7 +60,7 @@ table! {
 
 table! {
     files (file_id) {
-        file_id -> Integer,
+        file_id -> Nullable<Integer>,
         uploader -> Integer,
         audience -> Tinyint,
         file_name -> Varchar,

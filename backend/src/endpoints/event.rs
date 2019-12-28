@@ -4,6 +4,8 @@ use rocket_contrib::json::{Json, JsonValue};
 use rocket::http::Status;
 use crate::models::event_type::Eventtype;
 use crate::models::event::Event;
+use crate::models::event_file::Eventfile;
+use crate::models::file::File;
 use crate::models::user::User;
 use chrono::NaiveDateTime;
 use crate::auth::APIKey;
@@ -18,6 +20,18 @@ struct NewEventMedium {
     pub location: String,
     pub event_time: NaiveDateTime,
     pub points: f32,
+}
+
+#[derive(Serialize)]
+pub struct FileModel {
+    pub event_file: Eventfile,
+    pub file: File,
+}
+
+#[derive(Serialize)]
+pub struct EventModel {
+    pub event: Event,
+    pub files: Vec<FileModel>,
 }
 
 #[post("/create", data = "<event_medium>")]
@@ -56,7 +70,28 @@ fn create(event_medium: Json<NewEventMedium>, key: APIKey, connection: Connectio
 #[get("/")]
 pub fn get_all(connection: Connection) -> Result<Json<JsonValue>, Custom<String>> {
     let events: Vec<Event> = Event::read_all(&connection);
-    Ok(Json(json!{events}))
+    let events_model: Vec<EventModel> = events
+        .into_iter()
+        .map(|event| {
+            let event_id: i32 = event.event_id.unwrap();
+            let event_files = Eventfile::get_by_event(event_id, &connection);
+            let files: Vec<FileModel> = event_files
+                .into_iter()
+                .map(|event_file| {
+                    let file = event_file.get_file(&connection);
+                    FileModel {
+                        event_file,
+                        file,
+                    }
+                })
+                .collect();
+            EventModel { 
+                event: event, 
+                files: files,
+            }
+        })
+        .collect();
+    Ok(Json(json!{events_model}))
 }
 
 pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {

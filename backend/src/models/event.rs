@@ -6,7 +6,7 @@ use crate::diesel::ExpressionMethods;
 use chrono::NaiveDateTime;
 
 #[table_name = "events"]
-#[derive(Debug, Deserialize, Serialize, Queryable, Insertable, AsChangeset)]
+#[derive(Deserialize, Serialize, Queryable, Insertable, AsChangeset)]
 pub struct Event {
     pub event_id: Option<i32>,
     pub coordinator_id: Option<i32>,

@@ -60,6 +60,9 @@ CREATE TABLE files(
   PRIMARY KEY(file_id)
 );
 
+INSERT INTO files (uploader, audience, file_name, description)
+VALUES (1, 1, "bruh.jpg", "A bruh for testing.");
+
 CREATE TABLE event_types (
     event_type_id tinyint NOT NULL AUTO_INCREMENT,
     name varchar(40) NOT NULL,
@@ -119,12 +122,16 @@ INSERT INTO events (coordinator_id, event_type_id, name, additional_info, locati
 VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30");
 
 CREATE TABLE event_files(
+  dummy_id int NOT NULL,
   file_id int NOT NULL,
   event_id int NOT NULL,
   additional_info varchar(140),
   FOREIGN KEY(event_id) REFERENCES events(event_id),
   PRIMARY KEY(file_id)
 );
+
+INSERT INTO event_files (file_id, event_id, additional_info)
+VALUES (1, 1, "Additional info related to the event.");
 
 CREATE TABLE user_attendences(
   user_attendence_id int NOT NULL AUTO_INCREMENT,

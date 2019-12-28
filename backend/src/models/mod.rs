@@ -1,8 +1,10 @@
+pub mod event_file;
 pub mod event_type;
 pub mod event;
+pub mod file;
 pub mod user;
 pub mod password;
-pub mod usertype;
+pub mod user_type;
 
 use crypto::sha2::Sha256;
 use crate::crypto::digest::Digest;

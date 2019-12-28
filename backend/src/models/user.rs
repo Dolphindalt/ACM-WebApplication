@@ -3,7 +3,7 @@ use diesel::mysql::MysqlConnection;
 use diesel::prelude::*;
 use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
-use crate::models::usertype::Usertype;
+use crate::models::user_type::Usertype;
 
 #[table_name = "users"]
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
