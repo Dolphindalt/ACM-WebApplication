@@ -10,7 +10,7 @@ import { File, EventFile } from '../models/file';
 export class EventComponent implements OnInit {
 
   @Input() event: Event;
-  @Input() files: Array<JSON>;
+  @Input() files: any;
 
   constructor() { }
 

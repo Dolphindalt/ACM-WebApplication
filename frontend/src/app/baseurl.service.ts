@@ -10,7 +10,6 @@ export class BaseurlService implements HttpInterceptor {
   constructor(
     @Inject('BASE_API_URL') private baseUrl: string
   ) {
-
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

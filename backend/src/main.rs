@@ -22,6 +22,7 @@ mod email;
 
 use rocket_cors::{AllowedHeaders, AllowedOrigins, Error, Cors};
 use rocket::http::Method;
+use rocket_contrib::serve::StaticFiles;
 
 pub fn init_rocket() -> rocket::Rocket {
     rocket::ignite().manage(db::connect())
@@ -45,5 +46,6 @@ fn main() {
     rocket = endpoints::event::mount(rocket);
     rocket = endpoints::officers::mount(rocket);
     rocket.attach(cors)
+        .mount("/public", StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static")))
         .launch();
 }

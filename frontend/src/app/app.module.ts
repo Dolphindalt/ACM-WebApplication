@@ -18,6 +18,7 @@ import { BaseurlService } from './baseurl.service';
 import { EventComponent } from './event/event.component';
 import { EventBoardComponent } from './event-board/event-board.component';
 import { OfficerBoardComponent } from './officer-board/officer-board.component';
+import { FileComponent } from './file/file.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -33,7 +34,8 @@ export function tokenGetter() {
     RegisterComponent,
     EventComponent,
     EventBoardComponent,
-    OfficerBoardComponent
+    OfficerBoardComponent,
+    FileComponent
   ],
   imports: [
     BrowserModule,
