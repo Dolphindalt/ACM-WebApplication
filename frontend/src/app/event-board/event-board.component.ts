@@ -9,7 +9,8 @@ import { ToastService } from '../toast.service';
 })
 export class EventBoardComponent implements OnInit {
 
-  private events: any;
+  private future_events: any;
+  private past_events: any;
 
   constructor(
     private http: HttpClient,
@@ -21,7 +22,8 @@ export class EventBoardComponent implements OnInit {
   ngOnInit() {
     this.http.get("event").subscribe(
       (res) => {
-        this.events = res;
+        this.future_events = res[0];
+        this.past_events = res[1];
       },
       error => {
         this.toastService.show("An error occured while fetching events.", { classname: "bg-danger text-light" });

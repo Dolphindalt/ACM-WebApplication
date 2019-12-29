@@ -1,12 +1,22 @@
-<h3>Name: {{ event.name }}</h3>
-<p>Location: {{ event.location }}</p>
-<p>Time: {{ event.event_time }}</p>
-<p>Info: {{ event.additional_info }}</p>
-<p>Points: {{ event.points }}</p>
-<ngb-accordion #acc="ngbAccordion" *ngIf="files">
-    <ngb-panel title="Show Files">
-        <ng-template ngbPanelContent *ngFor="let ftup of files">
-            <app-file [file]="ftup.file"></app-file>
-        </ng-template>
-    </ngb-panel>
-</ngb-accordion>
+<div class="card">
+    <div class="card-header">
+        <h3>{{ event.name }}</h3>
+    </div>
+    <div class="card-body">
+        <p>{{ event.additional_info }}</p>
+        <p>Location: {{ event.location }}</p>
+        <p>Time: {{ event.event_time }}</p>
+        <p>Points: {{ event.points }}</p>
+    </div>
+    <div class="card-footer">
+        <ngb-accordion #acc="ngbAccordion" *ngIf="files.length">
+            <ngb-panel title="Show Files">
+                <ng-template ngbPanelContent>
+                    <div *ngFor="let ftup of files">
+                        <app-file [file]="ftup.file"></app-file>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>

@@ -24,7 +24,7 @@ impl Eventfile {
         }
     }
 
-    pub fn get_file(&self, connection: &MysqlConnection) -> File {
-        File::get_by_id(self.event_id, connection).unwrap()
+    pub fn get_file(&self, connection: &MysqlConnection) -> Option<File> {
+        File::get_by_id(self.file_id, connection)
     }
 }

@@ -1,10 +1,26 @@
-<div class="mt-5">
-    <ul *ngIf="events">
-        <li *ngFor="let e of events">
+<div class="jumbotron mt-5">
+    <h1>Upcoming Events</h1>
+    <div *ngIf="future_events" class="mt-5">
+        <div *ngFor="let e of future_events">
             <app-event [event]="e.event" [files]="e.files"></app-event>
-        </li>
-    </ul>
-    <div *ngIf="!events" class="jumbotron">
-        <h3>There are currently no events.</h3>
+        </div>
+    </div>
+    <div *ngIf="!future_events" class="mt-5">
+        <div class="jumbotron">
+            <h3>There are currently no upcoming events.</h3>
+        </div>
+    </div>
+</div>
+<div class="jumbotron mt-5">
+    <h1>Past Events</h1>
+    <div *ngIf="past_events" class="mt-5">
+        <div *ngFor="let e of past_events">
+            <app-event [event]="e.event" [files]="e.files"></app-event>
+        </div>
+    </div>
+    <div *ngIf="!past_events" class="mt-5">
+        <div class="jumbotron">
+            <h3>There are currently no past events.</h3>
+        </div>
     </div>
 </div>

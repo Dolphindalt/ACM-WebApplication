@@ -121,6 +121,12 @@ CREATE TABLE events (
 INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time, points)
 VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30", 0.0);
 
+INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time, points)
+VALUES (1, 2, "Bungalo Dance Party Night", "We are going to boogie woogie in the bungalo!", "Greens Apartments", "2030-04-05T14:30:30", 50.0);
+
+INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time, points)
+VALUES (1, 2, "Bungalo Dance Party Night 2", "Ameno ameno latire latiremo ameno", "Greens Apartments", "2031-04-05T14:30:30", 100.0);
+
 CREATE TABLE event_files(
   dummy_id int NOT NULL AUTO_INCREMENT,
   file_id int NOT NULL,
@@ -132,6 +138,12 @@ CREATE TABLE event_files(
 
 INSERT INTO event_files (file_id, event_id, additional_info)
 VALUES (1, 1, "Additional info related to the event.");
+
+INSERT INTO event_files (file_id, event_id, additional_info)
+VALUES (1, 3, "A dummy file 1.");
+
+INSERT INTO event_files (file_id, event_id, additional_info)
+VALUES (1, 3, "A dummy file 2.");
 
 CREATE TABLE user_attendences(
   user_attendence_id int NOT NULL AUTO_INCREMENT,
