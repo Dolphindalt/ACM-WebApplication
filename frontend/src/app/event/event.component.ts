@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Event } from '../models/event';
+import { File, EventFile } from '../models/file';
 
 @Component({
   selector: 'app-event',
@@ -9,6 +10,7 @@ import { Event } from '../models/event';
 export class EventComponent implements OnInit {
 
   @Input() event: Event;
+  @Input() files: Array<JSON>;
 
   constructor() { }
 

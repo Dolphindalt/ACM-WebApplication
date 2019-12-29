@@ -1,7 +1,7 @@
 <div class="mt-5">
     <ul *ngIf="events">
         <li *ngFor="let e of events">
-            <app-event [event]="e"></app-event>
+            <app-event [event]="e.event" [files]="e.files"></app-event>
         </li>
     </ul>
     <div *ngIf="!events" class="jumbotron">

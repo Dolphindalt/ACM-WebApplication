@@ -8,7 +8,7 @@ CREATE TABLE passwords (
 CREATE TABLE user_types (
   user_type_id tinyint NOT NULL AUTO_INCREMENT,
   name varchar(20) NOT NULL,
-  description varchar(50),
+  description varchar(180),
   is_admin boolean NOT NULL,
   PRIMARY KEY(user_type_id)
 );
@@ -118,16 +118,16 @@ CREATE TABLE events (
     PRIMARY KEY(event_id)
 );
 
-INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time)
-VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30");
+INSERT INTO events (coordinator_id, event_type_id, name, additional_info, location, event_time, points)
+VALUES (1, 2, "LAN Party Test", "A test of the LAN party event!", "Museum lab", "2007-04-05T14:30:30", 0.0);
 
 CREATE TABLE event_files(
-  dummy_id int NOT NULL,
+  dummy_id int NOT NULL AUTO_INCREMENT,
   file_id int NOT NULL,
   event_id int NOT NULL,
   additional_info varchar(140),
   FOREIGN KEY(event_id) REFERENCES events(event_id),
-  PRIMARY KEY(file_id)
+  PRIMARY KEY(dummy_id)
 );
 
 INSERT INTO event_files (file_id, event_id, additional_info)
