@@ -1,26 +1,22 @@
-<nav class="main-navbar">
-    <img src="assets/MTA.png"/>
-    <div class="menu-block">
-        <div class="main-menu">
-            <ul class="main-menu-frame">
-                <a routerLink=""><li class="button acm_blue">Home</li></a>
-                <a routerLink="events"><li class="button acm_blue">Events</li></a>
-                <a routerLink="officers"><li class="button acm_blue">Officers</li></a>
-            </ul>
-            <ul class="main-menu-frame">
-                <a *ngIf="!authenticated" routerLink="login"><li class="button acm_blue">Login</li></a>
-                <a *ngIf="!authenticated" routerLink="register"><li class="button acm_blue">Register</li></a>
-                <a *ngIf="authenticated"><li class="button acm_blue" (click)="attemptLogout()">Logout</li></a>
-            </ul>
-        </div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand">
+        <img src="assets/MTA.png" width="50px" />
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+    <div class="collapse navbar-collapse  justify-content-between" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a routerLink="" class="nav-link">Home</a></li>
+            <li class="nav-item"><a routerLink="events" class="nav-link">Events</a></li>
+            <li class="nav-item"><a routerLink="officers" class="nav-link">Officers</a></li>
+        </ul>
+        <ul class="navbar-nav">
+            <li *ngIf="!authenticated" class="nav-item"><a routerLink="login" class="nav-link">Login</a></li>
+            <li *ngIf="!authenticated" class="nav-item"><a routerLink="register" class="nav-link">Register</a></li>
+            <li *ngIf="authenticated"  (click)="attemptLogout()" class="nav-item"><a class="nav-link">Logout</a></li>
+        </ul>
     </div>
-    <fa-icon (click)="toggleSubMenu()" class="bars-block" [icon]="faBars"></fa-icon>
 </nav>
-<div *ngIf="openedSubMenu" class="bars-menu-content">
-        <a routerLink="" class="button shallow_blue">Home</a>
-        <a routerLink="events" class="button shallow_blue">Events</a>
-        <a routerLink="officers" class="button shallow_blue">Officers</a>
-        <a *ngIf="!authenticated" routerLink="login" class="button shallow_blue">Login</a>
-        <a *ngIf="!authenticated" routerLink="register" class="button shallow_blue">Register</a>
-        <a *ngIf="authenticated" class="button shallow_blue" (click)="attemptLogout()">Logout</a>
-</div>
