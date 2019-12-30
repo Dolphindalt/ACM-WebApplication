@@ -2,11 +2,12 @@ use crate::db::Connection;
 use rocket::{self};
 use rocket_contrib::json::{Json, JsonValue};
 use crate::models::user::User;
+use crate::models::user::UserModel;
 use rocket::response::status::{Custom};
 
 #[get("/")]
 fn get_all(connection: Connection) -> Result<Json<JsonValue>, Custom<String>> {
-    let officers: Vec<User> = User::get_officers(&connection);
+    let officers: Vec<UserModel> = User::into_user_models(&User::get_officers, &connection);
     Ok(Json(json!{officers}))
 }
 

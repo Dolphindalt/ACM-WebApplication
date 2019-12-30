@@ -19,6 +19,7 @@ import { EventComponent } from './event/event.component';
 import { EventBoardComponent } from './event-board/event-board.component';
 import { OfficerBoardComponent } from './officer-board/officer-board.component';
 import { FileComponent } from './file/file.component';
+import { UserComponent } from './user/user.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -35,7 +36,8 @@ export function tokenGetter() {
     EventComponent,
     EventBoardComponent,
     OfficerBoardComponent,
-    FileComponent
+    FileComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

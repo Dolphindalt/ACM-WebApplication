@@ -1,0 +1,11 @@
+<div class="p-2">
+    <div class="card" style="width: 18rem;">
+        <img alt="officer" class="card-img-top" [src]="backend_url + '/public/' + user.profile_picture.file_name" />
+        <div class="card-body">
+            <h4 class="card-title">{{ user.first_name  }} {{ user.last_name }}</h4>
+            <hr>
+            <h5 class="card-text">{{ user.user_type_string }}</h5>
+            <p class="card-text">{{ user.email }}</p>
+        </div>
+    </div>
+</div>

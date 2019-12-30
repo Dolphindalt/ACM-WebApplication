@@ -3,6 +3,7 @@ pub mod event_type;
 pub mod event;
 pub mod file;
 pub mod user;
+pub mod user_profile;
 pub mod password;
 pub mod user_type;
 

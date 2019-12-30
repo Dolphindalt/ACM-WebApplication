@@ -1,4 +1,5 @@
 -- This file should undo anything in `up.sql`
+DROP TABLE IF EXISTS user_profiles;
 DROP TABLE IF EXISTS debtor_fees;
 DROP TABLE IF EXISTS fees;
 DROP TABLE IF EXISTS fee_types;

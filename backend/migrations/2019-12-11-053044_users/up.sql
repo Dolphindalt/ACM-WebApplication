@@ -48,6 +48,12 @@ INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
 VALUES (1, 5, "Jeff", "Braun", "jbraun@mtech.edu", 0.0);
 INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
 VALUES (2, 1, "Frank", "Ackerman", "fackerman@mtech.edu", 0.0);
+INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
+VALUES (1, 4, "John", "Ballsman", "jballs@mtech.edu", 100.0);
+INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
+VALUES (1, 3, "Immanuel", "Kant", "ikant@mtech.edu", 420.0);
+INSERT INTO users (password_id, user_type, first_name, last_name, email, points)
+VALUES (1, 2, "John", "Locke", "jlocke@mtech.edu", 840.0);
 
 CREATE TABLE files(
   file_id int NOT NULL AUTO_INCREMENT,
@@ -62,6 +68,20 @@ CREATE TABLE files(
 
 INSERT INTO files (uploader, audience, file_name, description)
 VALUES (1, 1, "bruh.jpg", "A bruh for testing.");
+INSERT INTO files (uploader, audience, file_name, description)
+VALUES (2, 1, "momkey.png", "A monkey for fun.");
+
+CREATE TABLE user_profiles(
+  user_profile_id int NOT NULL AUTO_INCREMENT,
+  file_id int NOT NULL,
+  user_id int NOT NULL,
+  FOREIGN KEY(file_id) REFERENCES files(file_id),
+  FOREIGN KEY(user_id) REFERENCES users(user_id),
+  PRIMARY KEY(user_profile_id)
+);
+
+INSERT INTO user_profiles (file_id, user_id)
+VALUES (2, 3);
 
 CREATE TABLE event_types (
     event_type_id tinyint NOT NULL AUTO_INCREMENT,

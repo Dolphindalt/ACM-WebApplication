@@ -4,6 +4,8 @@ use diesel::prelude::*;
 use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
 use crate::models::user_type::Usertype;
+use crate::models::file::FileModel;
+use crate::models::user_profile::UserProfile;
 
 #[table_name = "users"]
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
@@ -87,4 +89,33 @@ impl User {
     pub fn delete(user_id: i32, connection: &MysqlConnection) -> bool {
         diesel::delete(users::table.find(user_id)).execute(connection).is_ok()
     }
+
+    pub fn into_user_models(collector: &dyn Fn(&MysqlConnection) -> Vec<User>, connection: &MysqlConnection) -> Vec<UserModel> {
+        collector(connection)
+            .into_iter()
+            .filter(|user| user.user_id.is_some())
+            .map(|user| {
+                let user_profile = UserProfile::get_by_user_id(user.user_id.unwrap(), &connection).into_file_model(&connection);
+                let user_type = Usertype::read(user.user_type, &connection).unwrap();
+                UserModel {
+                    user_type: user.user_type,
+                    user_type_string: user_type.name,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    profile_picture: user_profile,
+                }
+            })
+            .collect::<Vec<UserModel>>()
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserModel {
+    pub user_type: i8,
+    pub user_type_string: String,
+    pub email: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub profile_picture: FileModel,
 }

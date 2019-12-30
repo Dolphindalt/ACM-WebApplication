@@ -106,6 +106,14 @@ table! {
     }
 }
 
+table! {
+    user_profiles (user_profile_id) {
+        user_profile_id -> Nullable<Integer>,
+        file_id -> Integer,
+        user_id -> Integer,
+    }
+}
+
 joinable!(debtor_fees -> fees (fee_id));
 joinable!(debtor_fees -> users (debtor_id));
 joinable!(event_files -> events (event_id));
@@ -114,10 +122,12 @@ joinable!(events -> users (coordinator_id));
 joinable!(fees -> fee_types (fee_type_id));
 joinable!(files -> user_types (audience));
 joinable!(files -> users (uploader));
+joinable!(files -> user_profiles(file_id));
 joinable!(user_attendences -> events (event_id));
 joinable!(user_attendences -> users (user_id));
 joinable!(users -> passwords (password_id));
 joinable!(users -> user_types (user_type));
+joinable!(users -> user_profiles(user_id));
 
 allow_tables_to_appear_in_same_query!(
     debtor_fees,
@@ -131,4 +141,5 @@ allow_tables_to_appear_in_same_query!(
     users,
     user_attendences,
     user_types,
+    user_profiles,
 );

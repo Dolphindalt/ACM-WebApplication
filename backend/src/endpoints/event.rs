@@ -54,15 +54,11 @@ fn create(event_medium: Json<NewEventMedium>, key: APIKey, connection: Connectio
     }
 }
 
-#[derive(Serialize)]
-struct TimeCapsule(Vec<EventModel>, Vec<EventModel>);
-
 #[get("/")]
 pub fn get_all(connection: Connection) -> Result<Json<JsonValue>, Custom<String>> {
     let events_model_future: Vec<EventModel> = EventModel::get_events(&Event::read_all_upcoming_events, &connection);
     let events_model_past: Vec<EventModel> = EventModel::get_events(&Event::read_all_past_events, &connection);
-    let time_capsule = TimeCapsule(events_model_future, events_model_past);
-    Ok(Json(json!{time_capsule}))
+    Ok(Json(json!{(events_model_future, events_model_past)}))
 }
 
 pub fn mount(rocket: rocket::Rocket) -> rocket::Rocket {

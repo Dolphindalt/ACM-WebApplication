@@ -1,8 +1,5 @@
-<div class="mt-5">
-    <ul>
-        <li *ngFor="let officer of officers">
-            <h3>{{ officer.first_name }} {{ officer.last_name }}</h3>
-            <p>{{ officer.email }}</p>
-        </li>
-    </ul>
+<div class="d-flex justify-content-center">
+    <div class="mt-5" *ngFor="let officer of officers">
+        <app-user [user]="officer"></app-user>
+    </div>
 </div>

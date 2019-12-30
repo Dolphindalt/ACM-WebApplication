@@ -1,10 +1,11 @@
+import { File } from './file';
+
 export class User {
-    user_id: number;
-    password_id: number;
-    user_type_id: number;
+    user_type: number;
+    user_type_string: String;
     email: string;
-    password: string;
     first_name: string;
     last_name: string;
     points: number;
+    profile_picture: File;
 }
