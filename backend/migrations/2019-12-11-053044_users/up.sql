@@ -131,19 +131,18 @@ CREATE TABLE event_files(
   dummy_id int NOT NULL AUTO_INCREMENT,
   file_id int NOT NULL,
   event_id int NOT NULL,
-  additional_info varchar(140),
   FOREIGN KEY(event_id) REFERENCES events(event_id),
   PRIMARY KEY(dummy_id)
 );
 
-INSERT INTO event_files (file_id, event_id, additional_info)
-VALUES (1, 1, "Additional info related to the event.");
+INSERT INTO event_files (file_id, event_id)
+VALUES (1, 1);
 
-INSERT INTO event_files (file_id, event_id, additional_info)
-VALUES (1, 3, "A dummy file 1.");
+INSERT INTO event_files (file_id, event_id)
+VALUES (1, 3);
 
-INSERT INTO event_files (file_id, event_id, additional_info)
-VALUES (1, 3, "A dummy file 2.");
+INSERT INTO event_files (file_id, event_id)
+VALUES (1, 3);
 
 CREATE TABLE user_attendences(
   user_attendence_id int NOT NULL AUTO_INCREMENT,

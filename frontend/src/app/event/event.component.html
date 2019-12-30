@@ -1,22 +1,22 @@
 <div class="card">
     <div class="card-header">
-        <h3>{{ event.name }}</h3>
+        <h3 class="float-left">{{ event.name }}</h3>
+        <button type="button" class="btn btn-outline-primary float-right" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        Show
+        </button>
     </div>
-    <div class="card-body">
-        <p>{{ event.additional_info }}</p>
-        <p>Location: {{ event.location }}</p>
-        <p>Time: {{ event.event_time }}</p>
-        <p>Points: {{ event.points }}</p>
-    </div>
-    <div class="card-footer">
-        <ngb-accordion #acc="ngbAccordion" *ngIf="files.length">
-            <ngb-panel title="Show Files">
-                <ng-template ngbPanelContent>
-                    <div *ngFor="let ftup of files">
-                        <app-file [file]="ftup.file"></app-file>
-                    </div>
-                </ng-template>
-            </ngb-panel>
-        </ngb-accordion>
+    <div [ngbCollapse]="isCollapsed">
+        <div class="card-body">
+            <p>{{ event.additional_info }}</p>
+            <p>Location: {{ event.location }}</p>
+            <p>Time: {{ event.event_time }}</p>
+            <p>Points: {{ event.points }}</p>
+        </div>
+        <div class="card-footer">
+            <div *ngFor="let file of files">
+                <app-file [file]="file"></app-file>
+            </div>
+        </div>
     </div>
 </div>

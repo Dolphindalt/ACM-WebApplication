@@ -11,7 +11,6 @@ pub struct Eventfile {
     pub dummy_id: Option<i32>,
     pub file_id: i32,
     pub event_id: i32,
-    pub additional_info: Option<String>,
 }
 
 impl Eventfile {

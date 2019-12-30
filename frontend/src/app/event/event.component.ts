@@ -11,6 +11,7 @@ export class EventComponent implements OnInit {
 
   @Input() event: Event;
   @Input() files: any;
+  public isCollapsed = true;
 
   constructor() { }
 

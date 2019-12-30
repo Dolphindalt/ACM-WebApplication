@@ -26,7 +26,6 @@ table! {
         dummy_id -> Nullable<Integer>,
         file_id -> Integer,
         event_id -> Integer,
-        additional_info -> Nullable<Varchar>,
     }
 }
 

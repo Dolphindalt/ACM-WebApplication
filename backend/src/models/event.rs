@@ -6,7 +6,7 @@ use diesel::query_dsl::QueryDsl;
 use chrono::NaiveDateTime;
 use diesel::dsl;
 use crate::models::event_file::Eventfile;
-use crate::models::file::File;
+use crate::models::file::{FileModel};
 
 #[table_name = "events"]
 #[derive(Deserialize, Serialize, Queryable, Insertable, AsChangeset)]
@@ -19,29 +19,6 @@ pub struct Event {
     pub location: String,
     pub event_time: NaiveDateTime,
     pub points: f32,
-}
-
-#[derive(Serialize, Deserialize)]
-struct NewEventMedium {
-    pub coordinator_id: i32,
-    pub event_type_id: i8,
-    pub name: String,
-    pub additional_info: String,
-    pub location: String,
-    pub event_time: NaiveDateTime,
-    pub points: f32,
-}
-
-#[derive(Serialize)]
-pub struct FileModel {
-    pub event_file: Eventfile,
-    pub file: File,
-}
-
-#[derive(Serialize)]
-pub struct EventModel {
-    pub event: Event,
-    pub files: Vec<FileModel>,
 }
 
 impl Event {
@@ -74,6 +51,12 @@ impl Event {
     }
 }
 
+#[derive(Serialize)]
+pub struct EventModel {
+    pub event: Event,
+    pub files: Vec<FileModel>,
+}
+
 impl EventModel {
     pub fn get_events(collector: &dyn Fn(&MysqlConnection) -> Vec<Event>, connection: &MysqlConnection) -> Vec<EventModel> {
         let events = collector(connection);
@@ -88,11 +71,7 @@ impl EventModel {
                         event_file.get_file(&connection).is_some()
                     })
                     .map(|event_file| {
-                        let file = event_file.get_file(&connection).unwrap();
-                        FileModel {
-                            event_file: event_file,
-                            file: file,
-                        }
+                        event_file.get_file(&connection).unwrap().into_file_model(&connection)
                     })
                     .collect();
                 EventModel { 
